@@ -65,7 +65,10 @@ const App = () => {
 
   const playerOneCardRef = useRef(null);
   const playerTwoCardRef = useRef(null);
-  const potCardsRef = useRef(null);
+  const potDeckRef = useRef(null);
+  const globalDeckRef = useRef(null);
+  const playerOneDeckRef = useRef(null);
+  const playerTwoDeckRef = useRef(null);
 
   const [playerOne, setPlayerOne] = useState<PlayerState>({
     playedCard: null,
@@ -94,18 +97,57 @@ const App = () => {
   };
 
   const startGame = () => {
-    setPlayerOne({
-      playedCard: null,
-      potCards: [],
-      deck: globalDeck.slice(0, 26),
+    gsap.to(globalDeckRef.current, {
+      rotation: -10,
+      scale: 0,
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      onComplete: () => {
+        setPlayerOne({
+          playedCard: null,
+          potCards: [],
+          deck: globalDeck.slice(0, 26),
+        });
+        setPlayerTwo({
+          playedCard: null,
+          potCards: [],
+          deck: globalDeck.slice(26),
+        });
+        gsap.fromTo(
+          playerOneDeckRef.current,
+          {
+            rotation: -10,
+            scale: 0,
+            opacity: 0,
+            ease: "power2.out",
+          },
+          {
+            rotation: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.5,
+          },
+        );
+        gsap.fromTo(
+          playerTwoDeckRef.current,
+          {
+            rotation: 10,
+            scale: 0,
+            opacity: 0,
+            ease: "power2.out",
+          },
+          {
+            rotation: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.5,
+          },
+        );
+        setGlobalDeck([]);
+        setGameStarted(true);
+      },
     });
-    setPlayerTwo({
-      playedCard: null,
-      potCards: [],
-      deck: globalDeck.slice(26),
-    });
-    setGlobalDeck([]);
-    setGameStarted(true);
   };
 
   const cardsToPot = (
@@ -151,18 +193,16 @@ const App = () => {
         onComplete: () => {
           if (potDeck.length === 0) {
             gsap.fromTo(
-              potCardsRef.current,
+              potDeckRef.current,
               {
-                x: 0,
-                y: 0,
-                rotation: 10,
+                rotation: -10,
                 opacity: 0,
+                scale: 0,
               },
               {
-                x: 0,
-                y: 0,
                 rotation: 0,
                 opacity: 1,
+                scale: 1,
                 duration: 0.5,
                 ease: "power2.out",
               },
@@ -455,7 +495,7 @@ const App = () => {
                 duration: 0.5,
                 ease: "power2.out",
                 onComplete: () => {
-                  gsap.to(potCardsRef.current, {
+                  gsap.to(potDeckRef.current, {
                     x: -200,
                     y: -200,
                     rotation: 10,
@@ -521,7 +561,7 @@ const App = () => {
                 ease: "power2.out",
                 onComplete: () => {
                   gsap.fromTo(
-                    potCardsRef.current,
+                    potDeckRef.current,
                     {
                       x: 0,
                       y: 0,
@@ -567,32 +607,38 @@ const App = () => {
   return (
     <div className="">
       <div className="flex h-screen flex-col items-center justify-center gap-16 pt-24 pb-24">
-        {gameStarted ? (
-          <div className="flex h-1/2 w-full flex-row items-center justify-around">
+        <div className="flex h-1/2 w-full flex-row items-center justify-around">
+          <div className="" ref={playerOneDeckRef}>
             <CardDeck cards={playerOne.deck} flipped />
-            <div className="flex w-3/12 flex-row items-center justify-center">
-              <div className="flex flex-row gap-8">
-                <div className="" ref={playerOneCardRef}>
-                  {playerOne.playedCard ? (
-                    <Card card={playerOne.playedCard} />
-                  ) : null}
-                </div>
-                <div className="" ref={playerTwoCardRef}>
-                  {playerTwo.playedCard ? (
-                    <Card card={playerTwo.playedCard} />
-                  ) : null}
-                </div>
+          </div>
+          <div className="flex w-3/12 flex-row items-center justify-center">
+            <div className="flex flex-row gap-8">
+              <div className="" ref={playerOneCardRef}>
+                {playerOne.playedCard ? (
+                  <Card card={playerOne.playedCard} />
+                ) : null}
+              </div>
+              <div className="" ref={playerTwoCardRef}>
+                {playerTwo.playedCard ? (
+                  <Card card={playerTwo.playedCard} />
+                ) : null}
               </div>
             </div>
+          </div>
+          <div className="" ref={playerTwoDeckRef}>
             <CardDeck cards={playerTwo.deck} flipped />
           </div>
-        ) : null}
+        </div>
 
         <div className="flex h-1/2 flex-row items-center justify-center">
-          <div className="flex cursor-pointer" onClick={shuffleDeck}>
+          <div
+            className="flex cursor-pointer"
+            onClick={shuffleDeck}
+            ref={globalDeckRef}
+          >
             <CardDeck cards={globalDeck} />
           </div>
-          <div className="" ref={potCardsRef}>
+          <div className="" ref={potDeckRef}>
             <CardDeck cards={potDeck} flipped />
           </div>
         </div>
