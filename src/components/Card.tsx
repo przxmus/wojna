@@ -579,6 +579,8 @@ const Three = ({ card }: { card: ICard }) => {
             <CardSymbol symbol={getSymbolFromSuit(card.suit)} miniature />
           </div>
         </div>
+        <CardSymbol symbol={getSymbolFromSuit(card.suit)} />
+
         <div className="flex w-full rotate-180 flex-row items-center justify-between">
           <div className="flex flex-col items-center justify-center">
             <p className="text-lg">{card.value}</p>
