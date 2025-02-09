@@ -1,5 +1,3 @@
-import { JSX } from "react";
-
 const Unsupported = () => {
   return (
     <div>
