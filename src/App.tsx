@@ -371,7 +371,7 @@ const App = () => {
           {
             x: -200,
             y: 0,
-            rotation: 10,
+            rotation: -10,
             opacity: 0,
             duration: 0.5,
             ease: "power2.out",
@@ -410,7 +410,7 @@ const App = () => {
           {
             x: 200,
             y: 0,
-            rotation: -10,
+            rotation: 10,
             opacity: 0,
             duration: 0.5,
             ease: "power2.out",

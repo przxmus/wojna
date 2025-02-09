@@ -108,7 +108,7 @@ const BaseCard = ({
 }) => {
   return (
     <div
-      className="flex h-80 w-50 flex-col items-center justify-between rounded-2xl border-2 border-black bg-amber-50 p-4 font-bold select-none"
+      className="flex h-60 w-30 flex-col items-center justify-between rounded-2xl border-2 border-black bg-amber-50 p-4 font-bold select-none lg:h-80 lg:w-50"
       style={{
         color: getColorFromSuit(card.suit),
       }}

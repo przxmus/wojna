@@ -1,5 +1,8 @@
-import { memo, useMemo } from "react";
+import { memo, useMemo, useRef } from "react";
 import Card, { ICard } from "./Card";
+import { gsap } from "gsap";
+
+import { useGSAP } from "@gsap/react";
 
 const CardDeck = memo(
   ({ cards, flipped }: { cards: ICard[]; flipped?: boolean }) => {
@@ -9,14 +12,31 @@ const CardDeck = memo(
       [cards], // Only recreate rotations when number of cards changes
     );
 
+    const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    useGSAP(() => {
+      console.log("czego huju nie dzialasz");
+      // get each card element from ref
+      cardRefs.current.forEach((cardRef, index) => {
+        if (!cardRef) return;
+
+        // animate each card
+        gsap.to(cardRef, {
+          duration: 0.5,
+          rotation: cardRotations[index],
+          ease: "back",
+        });
+      });
+    }, [cardRotations]);
+
     return (
       <div className="relative inline-flex">
         {cards.map((card, index) => (
           <div
-            key={`${card.suit}-${card.value}`}
-            className="absolute transition-all duration-300 ease-in-out first:static"
-            style={{
-              transform: `rotate(${cardRotations[index]}deg)`,
+            key={`${card.suit}-${card.value}-${index}`}
+            className="absolute first:static"
+            ref={(el: HTMLDivElement | null) => {
+              cardRefs.current[index] = el;
             }}
           >
             <Card card={card} flipped={flipped} />
