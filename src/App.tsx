@@ -8,6 +8,8 @@ import withReactContent from "sweetalert2-react-content";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
+import { Tooltip } from "react-tooltip";
+
 gsap.registerPlugin(useGSAP);
 
 const MySwal = withReactContent(Swal);
@@ -453,6 +455,7 @@ const App = () => {
           playCard(playerOne, setPlayerOne);
           playCard(playerTwo, setPlayerTwo);
         } else if (playerOne.playedCard && playerTwo.playedCard) {
+          setMoveAvailable(false);
           // Handle pot resolution without playing card animations
           if (playerOne.playedCard.value > playerTwo.playedCard.value) {
             const updatedDeck = [
@@ -461,7 +464,6 @@ const App = () => {
               ...playerOne.deck,
               ...potDeck,
             ];
-            setMoveAvailable(false);
             gsap.fromTo(
               playerOneCardRef.current,
               {
@@ -513,9 +515,9 @@ const App = () => {
                         playedCard: null,
                       });
                       setPotDeck([]);
+                      setMoveAvailable(true);
                     },
                   });
-                  setMoveAvailable(true);
                 },
               },
             );
@@ -631,10 +633,14 @@ const App = () => {
         </div>
 
         <div className="flex h-1/2 flex-row items-center justify-center">
+          <Tooltip anchorSelect="#global-deck" place="top">
+            <p>Kliknij, aby przestasować</p>
+          </Tooltip>
           <div
             className="flex cursor-pointer"
             onClick={shuffleDeck}
             ref={globalDeckRef}
+            id="global-deck"
           >
             <CardDeck cards={globalDeck} />
           </div>
