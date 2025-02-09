@@ -197,11 +197,15 @@ const App = () => {
             gsap.fromTo(
               potDeckRef.current,
               {
+                x: 0,
+                y: 0,
                 rotation: -10,
                 opacity: 0,
                 scale: 0,
               },
               {
+                x: 0,
+                y: 0,
                 rotation: 0,
                 opacity: 1,
                 scale: 1,
